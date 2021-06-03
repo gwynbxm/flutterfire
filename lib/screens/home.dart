@@ -8,9 +8,25 @@ class HomeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Home',
-      home: HomeScreen(),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Login'),
+        actions: [
+          Builder(builder: (BuildContext context) {
+            return TextButton(
+              style: TextButton.styleFrom(
+                primary: Colors.white,
+              ),
+              child: Text('SIGN OUT'),
+              onPressed: () {
+                _auth.signOut();
+                Navigator.popAndPushNamed(context, '/');
+              },
+            );
+          })
+        ],
+      ),
+      body: HomeScreen(),
     );
   }
 }
@@ -26,17 +42,20 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-        actions: [
-          Builder(builder: (BuildContext context) {
-            return TextButton(
-              child: Text('SIGN OUT'),
-              onPressed: () {},
-            );
-          })
-        ],
-      ),
-    );
+        // appBar: AppBar(
+        //   title: Text('Home'),
+        //   actions: [
+        //     Builder(builder: (BuildContext context) {
+        //       return TextButton(
+        //         child: Text('SIGN OUT'),
+        //         onPressed: () {
+        //           _auth.signOut();
+        //           Navigator.popAndPushNamed(context, '/');
+        //         },
+        //       );
+        //     })
+        //   ],
+        // ),
+        );
   }
 }

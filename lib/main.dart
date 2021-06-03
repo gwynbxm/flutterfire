@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_test/routes.dart';
 import 'package:flutterfire_test/screens/login.dart';
 import 'package:flutterfire_test/screens/register.dart';
 
@@ -17,12 +18,8 @@ class FlutterFireApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Fire App',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('App'),
-        ),
-        body: PopupDialog(),
-      ),
+      initialRoute: '/',
+      routes: routes,
     );
   }
 }
@@ -43,22 +40,12 @@ class _PopupDialogState extends State<PopupDialog> {
             title: Text('Do you want to login or sign up?'),
             actions: [
               TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => LoginScreen(),
-                      ),
-                    );
-                  },
+                  onPressed: () =>
+                      Navigator.pushReplacementNamed(context, '/login'),
                   child: Text('LOGIN')),
               TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => RegisterScreen(),
-                    ),
-                  );
-                },
+                onPressed: () =>
+                    Navigator.pushReplacementNamed(context, '/register'),
                 child: Text('SIGN UP'),
               ),
             ],

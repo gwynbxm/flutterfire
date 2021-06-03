@@ -9,15 +9,11 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Login',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Login'),
-        ),
-        body: LoginAuth(),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Login'),
       ),
+      body: LoginAuth(),
     );
   }
 }

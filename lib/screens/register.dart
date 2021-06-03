@@ -9,15 +9,11 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Register',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Register'),
-        ),
-        body: RegisterAccount(),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Register'),
       ),
+      body: RegisterAccount(),
     );
   }
 }
