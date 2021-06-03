@@ -49,8 +49,14 @@ class _LoginAuthState extends State<LoginAuth> {
 
   void _signInFirebase() async {
     try {
-      _auth.signInWithEmailAndPassword(
+      final user = _auth.signInWithEmailAndPassword(
           email: _emailCon.text, password: _pwdCon.text);
+      if (user != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeApp()),
+        );
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak');
