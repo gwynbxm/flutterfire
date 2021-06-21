@@ -1,4 +1,4 @@
-class User {
+class UserData {
   String emailAdd;
   String password;
 
@@ -9,5 +9,5 @@ class User {
   // }
 
   //simplified constructor of the constructor above
-  User({this.emailAdd, this.password});
+  UserData({this.emailAdd, this.password});
 }

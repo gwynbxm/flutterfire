@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutterfire_test/services/flutterfire.dart';
+
+import 'home.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -38,12 +41,18 @@ class _RegisterAccountState extends State<RegisterAccount> {
   //check whether email exist in db
 //else save into db and show snackbar saying successful account creation
 
-  void _validateCred() {
+  void _validateCred() async {
     FormState form = _formKey.currentState;
     if (form.validate()) {
-      _registerToFirebase();
-      // Scaffold.of(context)
-      //     .showSnackBar(SnackBar(content: Text('Validated Form')));
+      // _registerToFirebase();
+
+      User user = await Auth().register(_emailCon.text, _pwdCon.text);
+      if (user != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      }
     } else {
       print('Form is invalid');
     }

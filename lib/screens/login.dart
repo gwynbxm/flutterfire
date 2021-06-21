@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_test/screens/home.dart';
+import 'package:flutterfire_test/services/flutterfire.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -32,12 +33,18 @@ class _LoginAuthState extends State<LoginAuth> {
   TextEditingController _emailCon = TextEditingController();
   TextEditingController _pwdCon = TextEditingController();
 
-  void _validateCred() {
+  void _validateCred() async {
     FormState form = _formKey.currentState;
     if (form.validate()) {
-      _signInFirebase();
-      // Scaffold.of(context)
-      //     .showSnackBar(SnackBar(content: Text('Validated Form')));
+      // _signInFirebase();
+      // form.save();
+      User result = await Auth().signIn(_emailCon.text, _pwdCon.text);
+      if (result != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      }
     } else {
       print('Form is invalid');
     }
@@ -50,7 +57,7 @@ class _LoginAuthState extends State<LoginAuth> {
       if (user != null) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomeApp()),
+          MaterialPageRoute(builder: (context) => HomeScreen()),
         );
       }
     } on FirebaseAuthException catch (e) {
