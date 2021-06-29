@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_test/screens/home.dart';
 import 'package:flutterfire_test/services/flutterfire.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -38,8 +39,14 @@ class _LoginAuthState extends State<LoginAuth> {
     if (form.validate()) {
       // _signInFirebase();
       // form.save();
+
       User result = await Auth().signIn(_emailCon.text, _pwdCon.text);
       if (result != null) {
+        final SharedPreferences sharedPreferences =
+            await SharedPreferences.getInstance();
+        sharedPreferences.setBool('login', false);
+        sharedPreferences.setString('email', result.email);
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => HomeScreen()),

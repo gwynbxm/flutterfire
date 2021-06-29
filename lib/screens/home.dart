@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterfire_test/services/flutterfire.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -42,22 +43,33 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  User cUser;
+  // User cUser;
+  SharedPreferences sharedPreferences;
+  String displayEmail = '';
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getCurrentUser();
+    // getCurrentUser();
+    getData();
   }
 
-  void getCurrentUser() {
-    User currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser != null) {
-      setState(() {
-        cUser = currentUser;
-      });
-    }
+  // void getCurrentUser() {
+  //   User currentUser = FirebaseAuth.instance.currentUser;
+  //
+  //   if (currentUser != null) {
+  //     setState(() {
+  //       cUser = currentUser;
+  //     });
+  //   }
+  // }
+
+  getData() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      displayEmail = sharedPreferences.getString('email');
+    });
   }
 
   @override
@@ -73,6 +85,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: Text('SIGN OUT'),
               onPressed: () async {
+                sharedPreferences.remove('email');
+                sharedPreferences.setBool('login', true);
                 await Auth().signOut();
                 Navigator.popAndPushNamed(context, '/');
               },
@@ -82,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Container(
         child: Center(
-          child: Text('Welcome, ' + cUser.email),
+          child: Text('Welcome, ' + '$displayEmail'),
         ),
       ),
     );
