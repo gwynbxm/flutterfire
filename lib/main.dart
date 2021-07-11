@@ -5,11 +5,13 @@ import 'package:flutterfire_test/screens/home.dart';
 import 'package:flutterfire_test/screens/login.dart';
 import 'package:flutterfire_test/screens/popup.dart';
 import 'package:flutterfire_test/screens/register.dart';
+import 'package:flutterfire_test/services/session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await Session.init();
   runApp(FlutterFireApp());
 }
 

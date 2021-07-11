@@ -1,6 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutterfire_test/model/user_model.dart';
+import 'package:flutterfire_test/screens/edit_profile.dart';
+import 'package:flutterfire_test/screens/popup.dart';
+import 'package:flutterfire_test/services/firestore.dart';
 import 'package:flutterfire_test/services/flutterfire.dart';
+import 'package:flutterfire_test/services/session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -45,7 +51,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // User cUser;
   SharedPreferences sharedPreferences;
-  String displayEmail = '';
+  String displayEmail, username = '';
 
   @override
   void initState() {
@@ -53,8 +59,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     // getCurrentUser();
     getData();
+    // displayEmail = Session.getEmail();
   }
-
+  //
   // void getCurrentUser() {
   //   User currentUser = FirebaseAuth.instance.currentUser;
   //
@@ -71,6 +78,18 @@ class _HomeScreenState extends State<HomeScreen> {
       displayEmail = sharedPreferences.getString('email');
     });
   }
+
+  chooseImage() {}
+
+  // Future _profileInfo;
+  //
+  // @override
+  // void didChangeDependencies() {
+  //   // TODO: implement didChangeDependencies
+  //   super.didChangeDependencies();
+  //
+  //   _profileInfo = DatabaseServices.getUserInfo(context);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -89,15 +108,60 @@ class _HomeScreenState extends State<HomeScreen> {
                 sharedPreferences.setBool('login', true);
                 await Auth().signOut();
                 Navigator.popAndPushNamed(context, '/');
+
+                // Session.logout();
+                // await Session.setLogin(true);
+                // Navigator.pop(context);
               },
             );
           })
         ],
       ),
-      body: Container(
-        child: Center(
-          child: Text('Welcome, ' + '$displayEmail'),
-        ),
+      body: FutureBuilder(
+        future:
+            // _profileInfo,
+            FirebaseFirestore.instance
+                .collection('accounts')
+                .doc(_auth.currentUser.uid)
+                .get(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Container(
+                alignment: FractionalOffset.center,
+                child: CircularProgressIndicator());
+          }
+
+          UserData userData = UserData.fromDocument(snapshot.data);
+
+          return Container(
+            child: Center(
+              // child: Text('Welcome, ' + '$displayEmail'),
+              child: ListView(
+                children: [
+                  CircleAvatar(
+                    radius: 45,
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: AssetImage('assets/default-profile.png'),
+                  ),
+                  Text(
+                    userData.username,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(userData.emailAddress),
+                  // Text('$username', style: TextStyle(fontWeight: FontWeight.bold),),
+                  // Text('$displayEmail'),
+                  ElevatedButton(
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditProfileScreen())),
+                    child: Text('Edit'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

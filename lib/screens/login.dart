@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_test/screens/home.dart';
 import 'package:flutterfire_test/services/flutterfire.dart';
+import 'package:flutterfire_test/services/session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -41,11 +42,14 @@ class _LoginAuthState extends State<LoginAuth> {
       // form.save();
 
       User result = await Auth().signIn(_emailCon.text, _pwdCon.text);
+
       if (result != null) {
         final SharedPreferences sharedPreferences =
             await SharedPreferences.getInstance();
         sharedPreferences.setBool('login', false);
         sharedPreferences.setString('email', result.email);
+        // await Session.setLogin(false);
+        // await Session.setEmail(result.email);
 
         Navigator.push(
           context,
@@ -57,24 +61,24 @@ class _LoginAuthState extends State<LoginAuth> {
     }
   }
 
-  void _signInFirebase() async {
-    try {
-      final user = _auth.signInWithEmailAndPassword(
-          email: _emailCon.text, password: _pwdCon.text);
-      if (user != null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
-      }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email');
-      }
-    }
-  }
+  // void _signInFirebase() async {
+  //   try {
+  //     final user = _auth.signInWithEmailAndPassword(
+  //         email: _emailCon.text, password: _pwdCon.text);
+  //     if (user != null) {
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => HomeScreen()),
+  //       );
+  //     }
+  //   } on FirebaseAuthException catch (e) {
+  //     if (e.code == 'weak-password') {
+  //       print('The password provided is too weak');
+  //     } else if (e.code == 'email-already-in-use') {
+  //       print('The account already exists for that email');
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

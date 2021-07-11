@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutterfire_test/model/user_model.dart';
+import 'package:flutterfire_test/screens/login.dart';
+import 'package:flutterfire_test/services/firestore.dart';
 import 'package:flutterfire_test/services/flutterfire.dart';
 
 import 'home.dart';
@@ -32,6 +35,7 @@ class _RegisterAccountState extends State<RegisterAccount> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 //TextEditingControllers are used for tracking changes to text fields
+  TextEditingController _usernameCon = TextEditingController();
   TextEditingController _emailCon = TextEditingController();
   TextEditingController _pwdCon = TextEditingController();
 
@@ -46,11 +50,15 @@ class _RegisterAccountState extends State<RegisterAccount> {
     if (form.validate()) {
       // _registerToFirebase();
 
-      User user = await Auth().register(_emailCon.text, _pwdCon.text);
+      User user = await Auth()
+          .register(_usernameCon.text, _emailCon.text, _pwdCon.text);
       if (user != null) {
+        UserData userData =
+            UserData(username: _usernameCon.text, emailAddress: _emailCon.text);
+        await DatabaseServices.addUser(user.uid, userData);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(builder: (context) => LoginScreen()),
         );
       }
     } else {
@@ -79,6 +87,12 @@ class _RegisterAccountState extends State<RegisterAccount> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              TextFormField(
+                controller: _usernameCon,
+                decoration: const InputDecoration(labelText: 'Username'),
+                validator: (value) =>
+                    value.isEmpty ? 'Username cannot be blank' : null,
+              ),
               TextFormField(
                 controller: _emailCon,
                 decoration: const InputDecoration(labelText: 'Email Address'),

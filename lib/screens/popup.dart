@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterfire_test/screens/home.dart';
 import 'package:flutterfire_test/screens/register.dart';
+import 'package:flutterfire_test/services/session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login.dart';
@@ -56,7 +57,7 @@ class _PopupDialogState extends State<PopupDialog> {
   void checkIfSignedIn() async {
     sharedPreferences = await SharedPreferences.getInstance();
     newUser = (sharedPreferences.getBool('login') ?? true);
-
+    // newUser = Session.getLogin() ?? true;
     if (newUser == false) {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomeScreen()));
