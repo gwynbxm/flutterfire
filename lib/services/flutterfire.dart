@@ -1,27 +1,35 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutterfire_test/services/firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class BaseAuth {
-  Future<String> getCurrentUser();
+  Future<void> getCurrentUser();
   Future<User> signIn(String email, String password);
-  Future<User> register(String email, String password);
+  Future<User> register(String username, String email, String password);
   Future<void> signOut();
 }
 
 class Auth implements BaseAuth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final _fireStore = FirebaseFirestore.instance;
 
-  @override
-  Future<String> getCurrentUser() async {
-    // TODO: implement currentUser
-    final User user = _firebaseAuth.currentUser;
-    final uid = user.uid.toString();
+  // @override
+  // Future<User> getCurrentUser() async {
+  //   // TODO: implement currentUser
+  //   final User user = _firebaseAuth.currentUser;
+  //   return user;
+  // }
+  Future getCurrentUser() async {
+    return _firebaseAuth.currentUser;
+  }
 
-    return uid;
+  String getCurrentUserID() {
+    return _firebaseAuth.currentUser.uid;
   }
 
   @override
-  Future<User> register(String email, String password) async {
+  Future<User> register(String username, String email, String password) async {
     // TODO: implement register
     try {
       UserCredential userCredential = await _firebaseAuth
@@ -29,6 +37,18 @@ class Auth implements BaseAuth {
 
       final User registeredUser = userCredential.user;
       return registeredUser;
+
+      // this works!
+      // if (registeredUser != null) {
+      //   _fireStore.collection('accounts').doc(registeredUser.uid).set({
+      //     'username': username,
+      //     'email': email,
+      //     'profilePhoto': '',
+      //     //create snackbar
+      //   });
+      //   return registeredUser;
+      // }
+      // return null;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak');

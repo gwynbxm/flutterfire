@@ -79,18 +79,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  chooseImage() {}
-
-  // Future _profileInfo;
-  //
-  // @override
-  // void didChangeDependencies() {
-  //   // TODO: implement didChangeDependencies
-  //   super.didChangeDependencies();
-  //
-  //   _profileInfo = DatabaseServices.getUserInfo(context);
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,12 +106,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: FutureBuilder(
-        future:
-            // _profileInfo,
-            FirebaseFirestore.instance
-                .collection('accounts')
-                .doc(_auth.currentUser.uid)
-                .get(),
+        future: FirebaseFirestore.instance
+            .collection('accounts')
+            .doc(_auth.currentUser.uid)
+            .get(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Container(
@@ -141,7 +127,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   CircleAvatar(
                     radius: 45,
                     backgroundColor: Colors.transparent,
-                    backgroundImage: AssetImage('assets/default-profile.png'),
+                    backgroundImage: userData?.profilePhoto?.isEmpty ?? true
+                        ? AssetImage('assets/default-profile.png')
+                        : NetworkImage(userData.profilePhoto),
                   ),
                   Text(
                     userData.username,
