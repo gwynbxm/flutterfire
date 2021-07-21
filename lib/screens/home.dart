@@ -6,7 +6,6 @@ import 'package:flutterfire_test/screens/edit_profile.dart';
 import 'package:flutterfire_test/screens/popup.dart';
 import 'package:flutterfire_test/services/firestore.dart';
 import 'package:flutterfire_test/services/flutterfire.dart';
-import 'package:flutterfire_test/services/session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
